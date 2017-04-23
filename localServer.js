@@ -24,8 +24,13 @@ const manifest = {
     'registrations': [
         {
             'plugin': {
-                'register': '.',
-                'dependencies': ['hapi-mongodb']
+                'register': '.'
+            }
+        },
+        {
+            'plugin': {
+                'register': 'hapi-mongodb',
+                'options': dbOptions
             }
 
         }
@@ -33,21 +38,12 @@ const manifest = {
 };
 
 Glue.compose( manifest, options, (err, server) => {
-
-    server.register( { register: require('hapi-mongodb'),  options: dbOptions }, (err) => {
+    server.start( (err) => {
 
         if (err) {
-            console.error(err);
             throw err;
         }
-
-        server.start( (err) => {
-
-            if (err) {
-                throw err;
-            }
-            console.log('server running at: ' + server.info.uri);
-        });
+        console.log('server running at: ' + server.info.uri);
     });
 });
 
