@@ -1,6 +1,13 @@
 'use strict';
 
 const Glue = require('glue');
+const Labbable = require('labbable');
+
+// Step 1.
+// Make an instance of Labbable
+// to which we can pass the server
+const labbable = module.exports = new Labbable();
+
 const options = {
     relativeTo: __dirname
 };
@@ -37,13 +44,40 @@ const manifest = {
     ]
 };
 
-Glue.compose( manifest, options, (err, server) => {
-    server.start( (err) => {
+/* $lab:coverage:off$ */
+
+Glue.compose(manifest, options, (err, server) => {
+
+    if (err) {
+        throw err;
+    }
+
+    // Step 2.
+    // Show the server to our instance of labbable
+    labbable.using(server);
+
+    server.initialize((err) => {
 
         if (err) {
             throw err;
         }
-        console.log('server running at: ' + server.info.uri);
+
+        // Don't continue to start server if module
+        // is being require()'d (likely in a test)
+        if (module.parent) {
+            return;
+        }
+
+        server.start((err) => {
+
+            if (err) {
+                throw err;
+            }
+            console.log('Server running at: ' + server.info.uri);
+            //API Running on port 3000
+        });
     });
 });
+
+/* $lab:coverage:on$ */
 

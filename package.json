@@ -22,6 +22,6 @@
     "node": "7.3.0"
   },
   "scripts": {
-    "test": "lab -L -r tap -o stdout -r html -o test.html"
+    "test": "lab -L -v -r tap -o stdout -r html -o test.html"
   }
 }
